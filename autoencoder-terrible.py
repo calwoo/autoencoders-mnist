@@ -24,6 +24,8 @@ class Model:
             self.hidden,
             784)
         self.loss = tf.reduce_mean(tf.square(self.outputs - self.inputs))
+        # self.loss = tf.reduce_mean(
+        #    tf.nn.softmax_cross_entropy_with_logits_v2(labels=self.inputs, logits=self.outputs))
         self.optimizer = tf.train.AdamOptimizer(learning_rate).minimize(self.loss)
 
     def encoder(self, inputs):
@@ -52,14 +54,14 @@ class Model:
             ax.get_yaxis().set_visible(False)
         plt.show()
 
-    def train(self, inputs, epochs=30):
+    def train(self, inputs, epochs=10):
         self.sess.run(tf.global_variables_initializer())
         for i in range(epochs):
             _loss, _ = self.sess.run([self.loss, self.optimizer],
                 feed_dict={self.inputs:inputs})
             print("epoch %d, loss = %.03f" % (i, _loss))
 
-learning_rate = 0.05
+learning_rate = 0.001
 model = Model(32, learning_rate)
 model.train(x_train.reshape(-1, 784))
 
